@@ -183,57 +183,93 @@ mindmap
 LOGISCOPE is built on a decoupled, high-performance architecture utilizing a React/TypeScript frontend client communicating with a FastAPI Python analytical backend.
 
 ```mermaid
-flowchart TD
-    subgraph Client ["Client Presentation Tier (React 19 + TypeScript + Vite)"]
-        UI["C2 Command Dashboard"]
-        MAP["GIS Operations Map (Leaflet / Esri)"]
-        SIM_UI["Simulation Lab & What-If Studio"]
-        SYN_UI["Mathematical Foundations & KaTeX Engine"]
-        API_SVC["REST API Client Service"]
+flowchart TB
+    %% ─────────────────────────────────────────────────────────────────────────────
+    %% TIER 1: CLIENT PRESENTATION (REACT 19 + TYPESCRIPT + VITE)
+    %% ─────────────────────────────────────────────────────────────────────────────
+    subgraph ClientTier ["🖥️ TIER 1: CLIENT PRESENTATION & DECISION SUPPORT (React 19 + TypeScript + Vite)"]
+        direction LR
+        UI_DASH["<b>C2 Command Dashboard</b><br/>• Network Readiness KPIs<br/>• High-Altitude Threat Alerts<br/>• Immediate Action Queue"]
+        UI_MAP["<b>GIS Operations Cartography</b><br/>• Leaflet + Esri Multi-Layer Tiles<br/>• Dynamic Corridor Polylines<br/>• Elevation Hillshade Overlays"]
+        UI_FORECAST["<b>7-Day Prediction Center</b><br/>• Multivariate 7D Burn Curves<br/>• Shaded 95% Confidence Bounds<br/>• Depletion Timers (T_breach)"]
+        UI_SIM["<b>What-If Simulation Lab</b><br/>• Multi-Factor Stress Testing<br/>• Unmitigated vs AI Comparison<br/>• Autonomous Action Plans"]
+        UI_LAB["<b>Mathematical Foundations Lab</b><br/>• KaTeX Math Rendering Engine<br/>• Dynamic Environmental Physics<br/>• Whitebox Formula Explainer"]
     end
 
-    subgraph Server ["Server Analytical Tier (Python / FastAPI)"]
-        API_ROUTER["FastAPI REST Controller"]
+    %% ─────────────────────────────────────────────────────────────────────────────
+    %% COMMUNICATION BUS
+    %% ─────────────────────────────────────────────────────────────────────────────
+    API_CLIENT["<b>REST API Client Gateway (Axios / Fetch)</b><br/>Async Non-Blocking JSON Calls • Auto Base URL Resolution"]
+
+    %% ─────────────────────────────────────────────────────────────────────────────
+    %% TIER 2: SERVER REST CONTROLLER (FASTAPI / PYTHON 3.11)
+    %% ─────────────────────────────────────────────────────────────────────────────
+    subgraph ServerTier ["⚡ TIER 2: ANALYTICAL BACKEND & COGNITIVE ENGINES (FastAPI / Python Async Core)"]
+        direction TB
         
-        subgraph Engines ["Analytical & Physics Engines"]
-            TWIN["Logistics Digital Twin Registry"]
-            FORECAST["Demand Forecasting Engine"]
-            ROUTE_INTEL["GIS & Terrain Intelligence Engine"]
-            SHORTAGE["Predictive Shortage Engine"]
-            ANOMALY["IoT Statistical Anomaly Detector"]
-            OPTIMIZER["Optimization & Pre-positioning Solver"]
-            SIMULATOR["What-If Scenario Simulation Lab"]
-            SYNTHETIC["Synthetic Explainer & Physics Engine"]
+        ROUTER["<b>FastAPI Application Controller & Endpoints Router</b><br/>CORS Security Middleware • Pydantic Schema Validator • $PORT Detection"]
+
+        subgraph CoreEngines ["🧠 Analytical, Geospatial & Optimization Engine Stack"]
+            direction LR
+            
+            subgraph TwinGroup ["Digital Twin State"]
+                TWIN["<b>Logistics Digital Twin Registry</b><br/>• Multi-Echelon Topologies<br/>• 5-Class Supply Inventory Vectors<br/>• Dynamic Personnel Capacity"]
+            end
+
+            subgraph PredictiveGroup ["Predictive Analytics Core"]
+                FORECAST["<b>Multivariate Demand Forecaster</b><br/>• Operational Tempo Multipliers<br/>• High-Altitude Fuel Viscosity<br/>• Autoregressive Uncertainty"]
+                SHORTAGE["<b>Predictive Shortage Engine</b><br/>• Cumulative Depletion Tracking<br/>• Hours-to-Safety Breach<br/>• Critical Deficit Severity Matrix"]
+                ANOMALY["<b>IoT Statistical Anomaly Radar</b><br/>• Gaussian Normalized Z-Scores<br/>• Cold-Chain Thermal Excursions<br/>• Fuel Line Puncture Detection"]
+            end
+
+            subgraph SpatialGroup ["Physics & GIS Intelligence"]
+                ROUTE_INTEL["<b>Terrain & Route Intelligence Engine</b><br/>• Slope & Altitude Resistance<br/>• Dynamic ETA Physics Solver<br/>• Infrastructure Hardening Factor"]
+            end
+
+            subgraph OptimizationGroup ["Mathematical Optimization"]
+                OPTIMIZER["<b>Pre-Positioning Solver</b><br/>• Constraint-Based MILP Model<br/>• Multi-Echelon Stock Balancing<br/>• Fleet Lift Allocation"]
+                SIMULATOR["<b>Scenario Simulation Engine</b><br/>• Dual-Run Benchmark Simulator<br/>• Readiness Gain Quantification<br/>• Historical Battle Replay"]
+            end
         end
     end
 
-    subgraph Data ["Data & Telemetry Layer"]
-        ENV_DATA["Meteorological Feeds"]
-        IOT_FEED["Ultrasonic, Thermal & RFID Sensor Stream"]
-        GEO_DATA["Geospatial Topologies & Elevation DEM"]
+    %% ─────────────────────────────────────────────────────────────────────────────
+    %% TIER 3: DATA & TELEMETRY LAYER
+    %% ─────────────────────────────────────────────────────────────────────────────
+    subgraph DataTier ["📡 TIER 3: MULTI-MODAL DATA & TELEMETRY INGESTION"]
+        direction LR
+        D_IOT["<b>IoT Telemetry Event Bus</b><br/>• Ultrasonic Tank Probes<br/>• Cold-Chain Medical Probes<br/>• RFID Transit Counter Gates"]
+        D_WEATHER["<b>Meteorological Stream</b><br/>• Synoptic Blizzard Reports<br/>• Precipitation / Flood Risk<br/>• Sub-Zero Thermal Gradients"]
+        D_GIS["<b>Geospatial DEM & Vector Data</b><br/>• High-Pass Elevation Profiles<br/>• Landslide Chokepoint Polygons<br/>• All-Weather Tunnel Geometry"]
+        D_FLEET["<b>Fleet Asset Telemetry</b><br/>• 160T Heavy Convoys<br/>• 75T High-Altitude Trucks<br/>• 45T Heavy-Lift Airheads"]
     end
 
-    UI --> API_SVC
-    MAP --> API_SVC
-    SIM_UI --> API_SVC
-    SYN_UI --> API_SVC
+    %% ─────────────────────────────────────────────────────────────────────────────
+    %% DATA FLOW INTERCONNECTIONS
+    %% ─────────────────────────────────────────────────────────────────────────────
+    UI_DASH <--> API_CLIENT
+    UI_MAP <--> API_CLIENT
+    UI_FORECAST <--> API_CLIENT
+    UI_SIM <--> API_CLIENT
+    UI_LAB <--> API_CLIENT
 
-    API_SVC --> API_ROUTER
+    API_CLIENT <==>|HTTP / REST JSON Payloads| ROUTER
 
-    API_ROUTER --> TWIN
-    API_ROUTER --> FORECAST
-    API_ROUTER --> ROUTE_INTEL
-    API_ROUTER --> SHORTAGE
-    API_ROUTER --> ANOMALY
-    API_ROUTER --> OPTIMIZER
-    API_ROUTER --> SIMULATOR
-    API_ROUTER --> SYNTHETIC
+    ROUTER <--> TWIN
+    ROUTER <--> FORECAST
+    ROUTER <--> SHORTAGE
+    ROUTER <--> ANOMALY
+    ROUTER <--> ROUTE_INTEL
+    ROUTER <--> OPTIMIZER
+    ROUTER <--> SIMULATOR
 
-    GEO_DATA --> ROUTE_INTEL
-    ENV_DATA --> ROUTE_INTEL
-    ENV_DATA --> FORECAST
-    IOT_FEED --> ANOMALY
-    TWIN --> SHORTAGE
+    D_IOT ==>|Real-Time Sensor Readings| ANOMALY
+    D_WEATHER ==>|Atmospheric Friction Data| ROUTE_INTEL
+    D_WEATHER ==>|Thermal Consumption Multiplier| FORECAST
+    D_GIS ==>|Elevation Profiles & Slope Gradients| ROUTE_INTEL
+    D_FLEET ==>|Payload Capacity & Fuel Availability| OPTIMIZER
+
+    TWIN --> FORECAST
     FORECAST --> SHORTAGE
     SHORTAGE --> OPTIMIZER
     ROUTE_INTEL --> OPTIMIZER

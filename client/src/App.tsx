@@ -5,11 +5,11 @@ import {
   TransportAsset, 
   ShortageAlert, 
   Recommendation, 
-  Anomaly,
-  TheaterMetadata,
-  NetworkVariation,
-  HistoricalCase
+  Anomaly, 
+  TheaterMetadata, 
+  NetworkVariation 
 } from './types';
+import { Smartphone, RotateCcw } from 'lucide-react';
 import { 
   fetchOverview, 
   fetchNodes, 
@@ -126,116 +126,135 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-command-bg text-slate-100 font-sans tactical-grid-bg selection:bg-cyan-500 selection:text-black">
-      {/* Top Tactical Navigation Bar */}
-      <Navbar
-        theaters={theaters}
-        selectedTheater={selectedTheater}
-        onSelectTheater={handleTheaterChange}
-        variations={networkVariations}
-        selectedVariation={selectedVariation}
-        onSelectVariation={handleVariationChange}
-        onTriggerForecast={handleTriggerForecast}
-        isForecastRunning={isForecastRunning}
-        activeRiskCount={shortages.length}
-      />
-
-      {/* Main Workspace Layout */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Tactical Left Sidebar */}
-        <Sidebar
-          currentTab={currentTab}
-          onSelectTab={setCurrentTab}
-          shortagesCount={shortages.length}
-          anomalyCount={anomalies.length}
-        />
-
-        {/* Central Tactical Content Workspace */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="max-w-7xl mx-auto space-y-6">
-            {currentTab === 'dashboard' && (
-              <DashboardView
-                overviewData={overviewData}
-                nodes={nodes}
-                routes={routes}
-                shortages={shortages}
-                recommendations={recommendations}
-                onSelectNode={(node) => {
-                  setSelectedNode(node);
-                  setCurrentTab('map');
-                }}
-                onOpenExplainable={(rec) => setSelectedRecommendation(rec)}
-                onNavigateTab={(tab) => setCurrentTab(tab)}
-              />
-            )}
-
-            {currentTab === 'map' && (
-              <GISMapView
-                nodes={nodes}
-                routes={routes}
-                fleet={fleet}
-                selectedNode={selectedNode}
-                onSelectNode={(node) => setSelectedNode(node)}
-              />
-            )}
-
-            {currentTab === 'forecast' && (
-              <ForecastView
-                nodes={nodes}
-                selectedNode={selectedNode}
-                onSelectNode={(node) => setSelectedNode(node)}
-              />
-            )}
-
-            {currentTab === 'routes' && (
-              <RouteIntelligenceView initialRoutes={routes} />
-            )}
-
-            {currentTab === 'simulation' && (
-              <SimulationLabView routes={routes} initialParams={injectedSimParams} />
-            )}
-
-            {currentTab === 'historical' && (
-              <HistoricalCasesView
-                onLoadScenarioIntoSimulation={(caseItem) => {
-                  setInjectedSimParams({
-                    ...caseItem.simulation_params,
-                    case_title: `${caseItem.year} ${caseItem.title}`
-                  });
-                  setCurrentTab('simulation');
-                }}
-                onNavigateToMapWithNodes={(theater, nodeIds) => {
-                  setSelectedTheater(theater);
-                  if (nodeIds && nodeIds.length > 0) {
-                    const matchedNode = nodes.find((n) => n.id === nodeIds[0]);
-                    if (matchedNode) setSelectedNode(matchedNode);
-                  }
-                  setCurrentTab('map');
-                }}
-              />
-            )}
-
-            {currentTab === 'telemetry' && <TelemetryView />}
-
-            {currentTab === 'synthetic' && <SyntheticLabView />}
+    <div className="min-h-screen flex flex-col bg-command-bg text-slate-100 font-sans tactical-grid-bg selection:bg-cyan-500 selection:text-black relative">
+      <div className="portrait-lock-overlay fixed inset-0 z-[999999] bg-[#070B12] flex-col items-center justify-center p-6 text-center text-slate-100 font-mono hidden select-none">
+        <div className="relative mb-6">
+          <div className="w-20 h-20 rounded-2xl bg-cyan-950/60 border-2 border-cyan-400/80 flex items-center justify-center shadow-glow-cyan">
+            <Smartphone className="w-10 h-10 text-cyan-400 animate-pulse transform rotate-90" />
           </div>
-        </main>
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-cyan-400 rounded-full animate-ping"></div>
+        </div>
+        <div className="inline-block px-3 py-1 rounded bg-rose-500/20 text-rose-400 border border-rose-500/40 text-xs font-bold uppercase tracking-widest mb-3">
+          TACTICAL C2 DISPLAY RESTRICTED
+        </div>
+        <h2 className="text-xl font-bold text-white mb-2">
+          ROTATE DEVICE TO LANDSCAPE
+        </h2>
+        <p className="text-xs text-slate-400 max-w-sm leading-relaxed mb-6 font-sans">
+          Logiscope.ai command and control maps, telemetry matrices, and multi-echelon twin analytics require widescreen landscape mode (16:9 / 16:10).
+        </p>
+        <div className="flex items-center space-x-2 text-[10px] text-cyan-400/80 border border-cyan-500/30 rounded-lg px-3 py-1.5 bg-cyan-950/30">
+          <RotateCcw className="w-3.5 h-3.5 animate-spin" />
+          <span>ORIENTATION LOCK ACTIVE • ROTATE SCREEN</span>
+        </div>
       </div>
 
-      {/* Modals */}
-      <RunForecastModal
-        isOpen={isForecastModalOpen}
-        onClose={() => setIsForecastModalOpen(false)}
-        onNavigateToRecommendations={() => setCurrentTab('dashboard')}
-        shortages={shortages}
-        recommendations={recommendations}
-      />
+      <div className="app-main-content min-h-screen flex flex-col flex-1">
+        <Navbar
+          theaters={theaters}
+          selectedTheater={selectedTheater}
+          onSelectTheater={handleTheaterChange}
+          variations={networkVariations}
+          selectedVariation={selectedVariation}
+          onSelectVariation={handleVariationChange}
+          onTriggerForecast={handleTriggerForecast}
+          isForecastRunning={isForecastRunning}
+          activeRiskCount={shortages.length}
+        />
 
-      <ExplainableModal
-        recommendation={selectedRecommendation}
-        onClose={() => setSelectedRecommendation(null)}
-        onApplied={handleRecommendationApplied}
-      />
+        <div className="flex-1 flex overflow-hidden">
+          <Sidebar
+            currentTab={currentTab}
+            onSelectTab={setCurrentTab}
+            shortagesCount={shortages.length}
+            anomalyCount={anomalies.length}
+          />
+
+          <main className="flex-1 overflow-y-auto p-3 md:p-6 lg:p-8">
+            <div className="max-w-7xl mx-auto space-y-4 md:space-y-6">
+              {currentTab === 'dashboard' && (
+                <DashboardView
+                  overviewData={overviewData}
+                  nodes={nodes}
+                  routes={routes}
+                  shortages={shortages}
+                  recommendations={recommendations}
+                  onSelectNode={(node) => {
+                    setSelectedNode(node);
+                    setCurrentTab('map');
+                  }}
+                  onOpenExplainable={(rec) => setSelectedRecommendation(rec)}
+                  onNavigateTab={(tab) => setCurrentTab(tab)}
+                />
+              )}
+
+              {currentTab === 'map' && (
+                <GISMapView
+                  nodes={nodes}
+                  routes={routes}
+                  fleet={fleet}
+                  selectedNode={selectedNode}
+                  onSelectNode={(node) => setSelectedNode(node)}
+                />
+              )}
+
+              {currentTab === 'forecast' && (
+                <ForecastView
+                  nodes={nodes}
+                  selectedNode={selectedNode}
+                  onSelectNode={(node) => setSelectedNode(node)}
+                />
+              )}
+
+              {currentTab === 'routes' && (
+                <RouteIntelligenceView initialRoutes={routes} />
+              )}
+
+              {currentTab === 'simulation' && (
+                <SimulationLabView routes={routes} initialParams={injectedSimParams} />
+              )}
+
+              {currentTab === 'historical' && (
+                <HistoricalCasesView
+                  onLoadScenarioIntoSimulation={(caseItem) => {
+                    setInjectedSimParams({
+                      ...caseItem.simulation_params,
+                      case_title: `${caseItem.year} ${caseItem.title}`
+                    });
+                    setCurrentTab('simulation');
+                  }}
+                  onNavigateToMapWithNodes={(theater, nodeIds) => {
+                    setSelectedTheater(theater);
+                    if (nodeIds && nodeIds.length > 0) {
+                      const matchedNode = nodes.find((n) => n.id === nodeIds[0]);
+                      if (matchedNode) setSelectedNode(matchedNode);
+                    }
+                    setCurrentTab('map');
+                  }}
+                />
+              )}
+
+              {currentTab === 'telemetry' && <TelemetryView />}
+
+              {currentTab === 'synthetic' && <SyntheticLabView />}
+            </div>
+          </main>
+        </div>
+
+        <RunForecastModal
+          isOpen={isForecastModalOpen}
+          onClose={() => setIsForecastModalOpen(false)}
+          onNavigateToRecommendations={() => setCurrentTab('dashboard')}
+          shortages={shortages}
+          recommendations={recommendations}
+        />
+
+        <ExplainableModal
+          recommendation={selectedRecommendation}
+          onClose={() => setSelectedRecommendation(null)}
+          onApplied={handleRecommendationApplied}
+        />
+      </div>
     </div>
   );
 };

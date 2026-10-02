@@ -145,3 +145,41 @@ select option {
   background-color: #0D1525 !important;
   color: #F1F5F9 !important;
 }
+
+/* Mobile Portrait Rotation Lock Prompt */
+@media screen and (orientation: portrait) and (max-width: 1024px) {
+  .portrait-lock-overlay {
+    display: flex !important;
+  }
+  .app-main-content {
+    display: none !important;
+  }
+}
+
+@media screen and (orientation: landscape), screen and (min-width: 1025px) {
+  .portrait-lock-overlay {
+    display: none !important;
+  }
+}
+
+/* Mobile Landscape Optimizations */
+@media screen and (orientation: landscape) and (max-height: 600px) {
+  header {
+    height: 3.25rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  
+  aside {
+    width: 15rem !important;
+  }
+  
+  main {
+    padding: 0.75rem !important;
+  }
+
+  .glass-panel {
+    padding: 0.75rem !important;
+  }
+}
+
