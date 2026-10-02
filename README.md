@@ -344,20 +344,24 @@ flowchart LR
 
 ### Parameters and Multipliers
 
-* **Base Rate ($\text{BaseRate}_i$)**: Nominal daily consumption per troop:
-  * Fuel (Class III): $0.18\text{ kL} \cdot \text{Troops}$
-  * Ammunition (Class V): $0.08\text{ Tons} \cdot \text{Troops}$
-  * Rations (Class I): $0.04\text{ Pallets} \cdot \text{Troops}$
-  * Medical (Class VIII): $0.06\text{ Kits} \cdot \text{Troops}$
-  * Spare Parts (Class IX): $0.02\text{ Crates} \cdot \text{Troops}$
-* **Tempo Scalar ($M_{\text{tempo}}$)**: $\text{LOW} = 0.75$, $\text{NORMAL} = 1.00$, $\text{HIGH} = 1.45$, $\text{SURGE} = 1.90$
-* **Weather Multiplier ($M_{\text{weather}}$)**: $\text{CLEAR} = 1.00$, $\text{FOG} = 1.08$, $\text{RAIN} = 1.15$, $\text{HEAVY\_STORM} = 1.30$, $\text{SNOW\_ICE} = 1.40$
-* **Altitude Penalty ($M_{\text{altitude}}$)**: Models vehicle engine oxygen starvation and sub-zero fuel viscosity:
+| Parameter | Symbol | Nominal Value / Scaling Rules |
+| :--- | :--- | :--- |
+| **Class III: Fuel** | $\text{BaseRate}_{\text{fuel}}$ | $0.18\text{ kL} \cdot \text{Troops / day}$ |
+| **Class V: Ammunition** | $\text{BaseRate}_{\text{ammo}}$ | $0.08\text{ Tons} \cdot \text{Troops / day}$ |
+| **Class I: Rations** | $\text{BaseRate}_{\text{rations}}$ | $0.04\text{ Pallets} \cdot \text{Troops / day}$ |
+| **Class VIII: Medical** | $\text{BaseRate}_{\text{med}}$ | $0.06\text{ Kits} \cdot \text{Troops / day}$ |
+| **Class IX: Spare Parts** | $\text{BaseRate}_{\text{spares}}$ | $0.02\text{ Crates} \cdot \text{Troops / day}$ |
+| **Operational Tempo** | $M_{\text{tempo}}$ | $\text{LOW}=0.75$, $\text{NORMAL}=1.00$, $\text{HIGH}=1.45$, $\text{SURGE}=1.90$ |
+| **Weather Multiplier** | $M_{\text{weather}}$ | $\text{CLEAR}=1.00$, $\text{FOG}=1.08$, $\text{RAIN}=1.15$, $\text{STORM}=1.30$, $\text{SNOW}=1.40$ |
+| **Demand Surge** | $M_{\text{surge}}$ | $1.0 + (\text{SurgePercentage} / 100)$ |
 
-$$M_{\text{altitude}} = 1.0 + \max\left(0, \frac{\text{Elevation} - 1000\text{m}}{10000\text{m}} \cdot 0.40\right)$$
+#### High-Altitude Environmental Penalty
+$$M_{\text{altitude}} = 1.0 + \max\left(0, \frac{\text{Elevation} - 1000}{10000} \cdot 0.40\right)$$
 
-* **Confidence Intervals (95% CI)**:
-$$\text{CI}_{95\%}(t) = \text{ProjectedStock}(t) \pm 1.96 \cdot \left(\text{BurnRate} \cdot 0.09 \cdot t^{0.65}\right)$$
+#### Cumulative Uncertainty and Confidence Bounds (95% CI)
+$$\sigma_{\text{cum}}(t) = \text{DailyBurnRate} \cdot 0.09 \cdot t^{0.65}$$
+
+$$\text{CI}_{0.95}(t) = \text{ProjectedStock}(t) \pm 1.96 \cdot \sigma_{\text{cum}}(t)$$
 
 ---
 
@@ -457,7 +461,7 @@ flowchart LR
 
 LOGISCOPE computes a composite **Node Readiness Index** ($R_j \in [0, 100]$):
 
-$$R_j = 0.35 \cdot \left(\frac{S_{\text{fuel}}}{S_{\text{fuel, safe}}}\right) + 0.25 \cdot \left(\frac{S_{\text{ammo}}}{S_{\text{ammo, safe}}}\right) + 0.15 \cdot \left(\frac{S_{\text{rations}}}{S_{\text{rations, safe}}}\right) + 0.15 \cdot \left(\frac{S_{\text{med}}}{S_{\text{med, safe}}}\right) + 0.10 \cdot \left(\frac{S_{\text{spares}}}{S_{\text{spares, safe}}}\right)$$
+$$R_j = 0.35 \cdot \left(\frac{S_{\text{fuel}}}{S_{\text{safe, fuel}}}\right) + 0.25 \cdot \left(\frac{S_{\text{ammo}}}{S_{\text{safe, ammo}}}\right) + 0.15 \cdot \left(\frac{S_{\text{rations}}}{S_{\text{safe, rations}}}\right) + 0.15 \cdot \left(\frac{S_{\text{med}}}{S_{\text{safe, med}}}\right) + 0.10 \cdot \left(\frac{S_{\text{spares}}}{S_{\text{safe, spares}}}\right)$$
 
 The overall Network Readiness Index is the weighted average across all active nodes in the operational theater.
 
