@@ -146,14 +146,11 @@ export const RouteIntelligenceView: React.FC<RouteIntelligenceViewProps> = ({
               <Cpu className="w-5 h-5 animate-pulse" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                SPATIAL-TEMPORAL GRAPH NEURAL NETWORK (ST-GNN) ROUTING
-                <span className="px-2 py-0.5 text-[10px] rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/40">
-                  ST-GAT + T-GRU
-                </span>
+              <h2 className="text-base font-bold text-white uppercase tracking-wider">
+                ST-GNN ROUTING
               </h2>
               <p className="text-xs text-slate-400 font-sans mt-0.5">
-                Multi-horizon route disruption prediction, spatial-attention topology weighting, and terrain-aware multi-hop path optimization.
+                Terrain-aware disruption prediction &amp; path optimization
               </p>
             </div>
           </div>

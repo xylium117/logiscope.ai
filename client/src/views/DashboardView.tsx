@@ -39,7 +39,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Top Tactical KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 ls:grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-4 ls:gap-2">
         {/* Card 1: Network Readiness */}
         <div className="glass-panel p-4 rounded-xl relative overflow-hidden group hover:border-cyan-500/40 transition-all duration-300">
           <div className="flex items-center justify-between">
@@ -132,7 +132,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Main Grid: GIS Map & Predicted Shortages Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Digital Twin GIS Operations Preview */}
-        <div className="lg:col-span-8 glass-panel p-4 rounded-xl flex flex-col h-[520px]">
+        <div className="lg:col-span-8 glass-panel p-4 rounded-xl flex flex-col h-[520px] lm:h-[360px] ls:h-[260px]">
           <div className="flex items-center justify-between mb-3 px-1">
             <div className="flex items-center space-x-2">
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
@@ -155,7 +155,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Right Column: Predictive Shortage List */}
-        <div className="lg:col-span-4 glass-panel p-5 rounded-xl flex flex-col h-[520px]">
+        <div className="lg:col-span-4 glass-panel p-5 rounded-xl flex flex-col h-[520px] lm:h-[360px] ls:h-[260px]">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <AlertTriangle className="w-4 h-4 text-rose-400 animate-pulse" />
@@ -235,7 +235,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ls:gap-2">
           {recommendations.map((rec) => (
             <div
               key={rec.id}

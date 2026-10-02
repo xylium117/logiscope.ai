@@ -170,8 +170,8 @@ export const App: React.FC = () => {
             anomalyCount={anomalies.length}
           />
 
-          <main className="flex-1 overflow-y-auto p-3 md:p-6 lg:p-8">
-            <div className="max-w-7xl mx-auto space-y-4 md:space-y-6">
+          <main className="flex-1 overflow-y-auto p-3 md:p-6 lg:p-8 lm:p-2 ls:p-1.5">
+            <div className="max-w-7xl mx-auto space-y-4 md:space-y-6 lm:space-y-3 ls:space-y-2">
               {currentTab === 'dashboard' && (
                 <DashboardView
                   overviewData={overviewData}

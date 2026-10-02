@@ -76,7 +76,7 @@ export const RunForecastModal: React.FC<RunForecastModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-command-card border border-command-accent/60 rounded-2xl shadow-glow-cyan p-6 md:p-8 font-mono max-h-[90vh] overflow-y-auto my-auto">
+      <div className="relative w-full max-w-2xl bg-command-card border border-command-accent/60 rounded-2xl shadow-glow-cyan p-6 md:p-8 ls:p-4 font-mono max-h-[90vh] overflow-y-auto my-auto">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"

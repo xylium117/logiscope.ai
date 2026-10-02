@@ -6,6 +6,14 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        // Extra-small: 480px+
+        'xs': '480px',
+        // Landscape-small: landscape phones (height ≤ 500px)
+        'ls': { 'raw': '(orientation: landscape) and (max-height: 500px)' },
+        // Landscape-medium: landscape tablets / large phones (height ≤ 700px)
+        'lm': { 'raw': '(orientation: landscape) and (max-height: 700px)' },
+      },
       colors: {
         command: {
           bg: '#070B12',

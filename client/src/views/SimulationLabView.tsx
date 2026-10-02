@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIsLandscapeSmall } from '../hooks/useIsLandscape';
 import { 
   Sliders, 
   Play, 
@@ -39,6 +40,7 @@ export const SimulationLabView: React.FC<SimulationLabViewProps> = ({
   );
   const [simResult, setSimResult] = useState<SimulationResult | null>(null);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
+  const isLS = useIsLandscapeSmall();
 
   useEffect(() => {
     if (initialParams) {
@@ -91,27 +93,51 @@ export const SimulationLabView: React.FC<SimulationLabViewProps> = ({
             </p>
           </div>
 
-          <button
-            onClick={handleRunSimulation}
-            disabled={isSimulating}
-            className="px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-600 via-cyan-500 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold uppercase tracking-wider text-xs shadow-glow-cyan flex items-center space-x-2 transition-all disabled:opacity-50"
-          >
-            {isSimulating ? (
-              <>
-                <RefreshCw className="w-4 h-4 animate-spin text-white" />
-                <span>COMPUTING SCENARIO SOLVER...</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-4 h-4 fill-white text-white" />
-                <span>SIMULATE SCENARIO</span>
-              </>
-            )}
-          </button>
+          {isLS ? (
+            /* Icon-only square button for landscape-small */
+            <button
+              onClick={handleRunSimulation}
+              disabled={isSimulating}
+              title={isSimulating ? 'Computing...' : 'Simulate Scenario'}
+              style={{
+                width: '2.5rem',
+                height: '2.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '0.5rem',
+                flexShrink: 0,
+              }}
+              className="bg-gradient-to-r from-cyan-600 via-cyan-500 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-glow-cyan transition-all disabled:opacity-50"
+            >
+              {isSimulating
+                ? <RefreshCw className="w-4 h-4 animate-spin" />
+                : <Play className="w-4 h-4 fill-white" />}
+            </button>
+          ) : (
+            /* Full button for normal screens */
+            <button
+              onClick={handleRunSimulation}
+              disabled={isSimulating}
+              className="px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-600 via-cyan-500 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold uppercase tracking-wider text-xs shadow-glow-cyan flex items-center space-x-2 transition-all disabled:opacity-50 shrink-0"
+            >
+              {isSimulating ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                  <span>COMPUTING...</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 fill-white text-white" />
+                  <span>SIMULATE</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
 
         {/* 4 Interactive Parameter Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 ls:grid-cols-2 gap-5 ls:gap-3">
           {/* Weather Shock Selector */}
           <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2.5">
             <div className="text-xs font-bold text-slate-300 flex items-center space-x-1.5">

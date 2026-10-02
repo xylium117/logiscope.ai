@@ -1,4 +1,5 @@
-import React from 'react';
+﻿import React from 'react';
+import { useIsLandscapeSmall } from '../hooks/useIsLandscape';
 import { 
   LayoutDashboard, 
   Map, 
@@ -26,6 +27,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   shortagesCount,
   anomalyCount,
 }) => {
+  const isLS = useIsLandscapeSmall();
+
   const menuItems = [
     {
       id: 'dashboard' as TabType,
@@ -91,10 +94,65 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
+  /* â”€â”€ Icon-only rail for landscape-small phones â”€â”€ */
+  if (isLS) {
+    return (
+      <aside
+        style={{ width: '3.25rem', minWidth: '3.25rem' }}
+        className="border-r border-command-border bg-[#0B111E]/95 backdrop-blur-md flex flex-col py-2 select-none shrink-0 z-20 overflow-hidden"
+      >
+        <div className="flex flex-col items-center gap-1 px-1">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = currentTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => onSelectTab(item.id)}
+                title={item.label}
+                style={{
+                  width: '2.5rem',
+                  height: '2.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '0.5rem',
+                  border: isActive ? '1px solid rgba(0,240,255,0.6)' : '1px solid transparent',
+                  background: isActive ? 'rgba(8,47,73,0.7)' : 'transparent',
+                  boxShadow: isActive ? '0 0 12px -3px rgba(0,240,255,0.35)' : 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  flexShrink: 0,
+                }}
+              >
+                <div
+                  style={{
+                    width: '2rem',
+                    height: '2rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '0.375rem',
+                    background: isActive ? '#00F0FF' : 'rgba(30,41,59,0.9)',
+                    color: isActive ? '#000000' : '#94a3b8',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Icon width={15} height={15} />
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </aside>
+    );
+  }
+
+  /* â”€â”€ Full sidebar for desktop / landscape-medium â”€â”€ */
   return (
     <aside className="w-72 lg:w-80 border-r border-command-border bg-[#0B111E]/95 backdrop-blur-md flex flex-col justify-between py-4 select-none shrink-0 z-20">
       <div className="space-y-1.5 px-3.5">
-        <div className="px-3 py-1.5 text-[10px] font-mono font-bold tracking-widest text-slate-400 uppercase flex items-center justify-between">
+        <div className="sidebar-section-header px-3 py-1.5 text-[10px] font-mono font-bold tracking-widest text-slate-400 uppercase flex items-center justify-between">
           <span>OPERATIONAL MODULES</span>
           <span className="text-cyan-400 font-bold">8 ACTIVE</span>
         </div>
@@ -106,19 +164,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               key={item.id}
               onClick={() => onSelectTab(item.id)}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all duration-200 group relative ${
-                isActive
-                  ? 'bg-cyan-950/70 border border-command-accent/60 text-cyan-300 shadow-glow-cyan'
-                  : 'hover:bg-slate-800/80 text-slate-300 hover:text-white border border-transparent'
-              }`}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all duration-200 group relative ${isActive ? 'bg-cyan-950/70 border border-command-accent/60 text-cyan-300 shadow-glow-cyan' : 'hover:bg-slate-800/80 text-slate-300 hover:text-white border border-transparent'}`}
             >
               <div className="flex items-center space-x-3 min-w-0 flex-1 mr-2">
                 <div
-                  className={`p-2 rounded-lg shrink-0 transition-colors ${
-                    isActive
-                      ? 'bg-command-accent text-slate-950 font-bold shadow-md'
-                      : 'bg-slate-800/90 text-slate-300 group-hover:text-cyan-300 group-hover:bg-slate-800'
-                  }`}
+                  className={`p-2 rounded-lg shrink-0 transition-colors ${isActive ? 'bg-command-accent font-bold shadow-md' : 'bg-slate-800/90 text-slate-300 group-hover:text-cyan-300 group-hover:bg-slate-800'}`}
+                  style={isActive ? { color: '#000000' } : undefined}
                 >
                   <Icon className="w-4 h-4" />
                 </div>
@@ -135,17 +186,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="flex items-center space-x-1.5 shrink-0 pl-1">
                 {item.badge && (
                   <span
-                    className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border whitespace-nowrap ${
-                      item.badgeColor || 'bg-slate-800 text-slate-300 border-slate-700'
-                    }`}
+                    className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border whitespace-nowrap ${item.badgeColor || 'bg-slate-800 text-slate-300 border-slate-700'}`}
                   >
                     {item.badge}
                   </span>
                 )}
                 <ChevronRight
-                  className={`w-3.5 h-3.5 transition-transform shrink-0 ${
-                    isActive ? 'text-cyan-400 transform translate-x-0.5' : 'text-slate-500 opacity-0 group-hover:opacity-100'
-                  }`}
+                  className={`w-3.5 h-3.5 transition-transform shrink-0 ${isActive ? 'text-cyan-400 transform translate-x-0.5' : 'text-slate-500 opacity-0 group-hover:opacity-100'}`}
                 />
               </div>
             </button>
@@ -154,7 +201,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Footer System Diagnostic Box */}
-      <div className="px-4 pt-4 border-t border-command-border mx-3 mt-4">
+      <div className="sidebar-footer px-4 pt-4 border-t border-command-border mx-3 mt-4">
         <div className="p-3.5 rounded-xl bg-slate-900/95 border border-slate-800 text-[11px] font-mono space-y-2 shadow-inner">
           <div className="flex justify-between items-center text-slate-300">
             <span className="text-slate-400">THEATER GRID:</span>
