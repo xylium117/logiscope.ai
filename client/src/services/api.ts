@@ -187,3 +187,60 @@ export async function applyRecommendation(recId: string) {
   if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to apply recommendation`);
   return await res.json();
 }
+
+export async function fetchGnnDisruptions(params: {
+  theater?: string;
+  variation?: string;
+  weather_condition?: string;
+  threat_level?: string;
+  seismic_trigger?: boolean;
+  blocked_route_ids?: string[];
+}) {
+  const res = await fetch(`${SERVER_API_BASE_URL}/gnn/predict-disruptions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      theater: params.theater || 'ALL',
+      variation: params.variation || 'STANDARD',
+      weather_condition: params.weather_condition || 'NORMAL',
+      threat_level: params.threat_level || 'NORMAL',
+      seismic_trigger: !!params.seismic_trigger,
+      blocked_route_ids: params.blocked_route_ids || [],
+    }),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch GNN disruption predictions`);
+  return await res.json();
+}
+
+export async function computeGnnOptimalRoute(params: {
+  theater?: string;
+  variation?: string;
+  source_node_id: string;
+  target_node_id: string;
+  weather_condition?: string;
+  threat_level?: string;
+  blocked_route_ids?: string[];
+}) {
+  const res = await fetch(`${SERVER_API_BASE_URL}/gnn/optimal-route`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      theater: params.theater || 'ALL',
+      variation: params.variation || 'STANDARD',
+      source_node_id: params.source_node_id,
+      target_node_id: params.target_node_id,
+      weather_condition: params.weather_condition || 'NORMAL',
+      threat_level: params.threat_level || 'NORMAL',
+      blocked_route_ids: params.blocked_route_ids || [],
+    }),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to compute GNN optimal route`);
+  return await res.json();
+}
+
+export async function fetchGnnArchitectureSpecs() {
+  const res = await fetch(`${SERVER_API_BASE_URL}/gnn/model-architecture`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch GNN architecture specs`);
+  return await res.json();
+}
+

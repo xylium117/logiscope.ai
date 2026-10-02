@@ -303,3 +303,140 @@ export interface SyntheticSimulateResult {
     is_anomaly: boolean;
   };
 }
+
+export interface GNNAttributionBreakdown {
+  avalanche_glacial_hazard: number;
+  blizzard_freezing_precip: number;
+  landslide_slope_shear: number;
+  altitude_oxygen_engine_strain: number;
+  hostile_interdiction_threat: number;
+  chokepoint_throughput_bottleneck: number;
+}
+
+export interface GNNRoutePrediction {
+  route_id: string;
+  theater: string;
+  name: string;
+  source_id: string;
+  target_id: string;
+  type: 'PRIMARY_HIGHWAY' | 'ALTERNATE_TACTICAL' | 'MOUNTAIN_PASS' | 'AIR_CORRIDOR';
+  distance_km: number;
+  base_eta_hours: number;
+  gnn_eta_hours: number | null;
+  is_blocked: boolean;
+  resilience_score: number;
+  tactical_status: 'RECOMMENDED' | 'CAUTION' | 'AVOID';
+  disruption_prob_horizons: {
+    t_plus_1h: number;
+    t_plus_6h: number;
+    t_plus_12h: number;
+    t_plus_24h: number;
+    t_plus_48h: number;
+  };
+  attribution_breakdown: GNNAttributionBreakdown;
+  dominant_failure_mode: string;
+  coordinates: [number, number][];
+}
+
+export interface GNNDisruptionResponse {
+  execution_timestamp: string;
+  model_architecture: string;
+  nodes_processed_count: number;
+  edges_processed_count: number;
+  active_weather_condition: string;
+  threat_level: string;
+  seismic_trigger: boolean;
+  predictions: GNNRoutePrediction[];
+  spatial_attention_matrix: Array<{
+    route_id: string;
+    source_id: string;
+    target_id: string;
+    spatial_attention_weight: number;
+  }>;
+  network_vulnerability_summary: {
+    high_risk_routes_count: number;
+    safe_all_weather_corridors_count: number;
+    mean_network_resilience: number;
+    worst_chokepoint_segment: string;
+  };
+}
+
+export interface GNNPathDetail {
+  path_node_ids: string[];
+  route_segment_ids: string[];
+  total_distance_km: number;
+  total_eta_hours: number;
+  composite_risk_score: number;
+  average_resilience_score: number;
+  hops_count: number;
+  waypoints: Array<{
+    node_id: string;
+    name: string;
+    type: string;
+    elevation_m: number;
+    coords: [number, number];
+    incoming_segment?: string | null;
+    leg_distance_km: number;
+    leg_disruption_risk: number;
+  }>;
+  segments: Array<{
+    id: string;
+    name: string;
+    type: string;
+    distance_km: number;
+    disruption_prob: number;
+    resilience_score: number;
+    tactical_status: string;
+  }>;
+}
+
+export interface GNNOptimalRouteResult {
+  source: {
+    id: string;
+    name: string;
+    elevation_m: number;
+    theater: string;
+  };
+  destination: {
+    id: string;
+    name: string;
+    elevation_m: number;
+    theater: string;
+  };
+  gnn_resilient_path: GNNPathDetail | null;
+  naive_distance_path: GNNPathDetail | null;
+  tactical_fallback_path: GNNPathDetail | null;
+  tactical_advantage_analysis: {
+    risk_reduction_pct: number;
+    eta_tradeoff_hours: number;
+    resilience_boost_pct: number;
+    mission_survivability_verdict: 'TACTICALLY_SUPERIOR' | 'EQUIVALENT';
+  };
+}
+
+export interface GNNArchitectureSpecs {
+  model_name: string;
+  framework: string;
+  graph_topology: {
+    node_feature_dimensions: number;
+    node_features: string[];
+    edge_feature_dimensions: number;
+    edge_features: string[];
+    hidden_embedding_size: number;
+    spatial_attention_heads: number;
+    temporal_recurrent_steps: number;
+    chebyshev_polynomial_order: number;
+  };
+  neural_layers: Array<{
+    layer: string;
+    formulation: string;
+  }>;
+  validation_benchmark_metrics: {
+    disruption_classification_roc_auc: number;
+    disruption_f1_score: number;
+    mean_absolute_eta_error_hours: number;
+    classical_dijkstra_baseline_eta_error_hours: number;
+    chokepoint_detection_precision: number;
+  };
+}
+

@@ -452,29 +452,47 @@ flowchart LR
 
 ---
 
-## 12. GIS and Terrain Analysis
+## 12. GIS, Terrain Analysis & Spatio-Temporal Graph Neural Networks (ST-GNN)
 
-Unlike standard commercial navigation systems that evaluate only shortest distance or nominal travel speed, LOGISCOPE evaluates an **Environmental & Terrain Resistance Function**:
-
-$$\text{DynamicETA}(r) = \frac{\text{Distance}(r)}{\text{BaseSpeed} \cdot S_{\text{terrain}}(r) \cdot S_{\text{weather}}(r)}$$
-
-$$\text{ResilienceScore}(r) = \max\left(0, \min\left(100, 100 - P_{\text{disrupt}}(r) + B_{\text{infra}}(r)\right)\right)$$
-
-Where:
-* $P_{\text{disrupt}}(r) = \min(98, 0.40 \cdot \text{TerrainRisk} + 0.45 \cdot \text{WeatherRisk})$
-* $B_{\text{infra}}(r) = +20\%$ bonus for reinforced, all-weather infrastructure (e.g., Sela Tunnel, Atal Tunnel).
-* $S_{\text{terrain}}$ is the slope and elevation friction coefficient ($0.45$ to $1.00$).
+Unlike standard commercial navigation systems that evaluate only shortest geodesic distance or nominal speed, LOGISCOPE implements an inductive **Spatio-Temporal Graph Neural Network (ST-GNN)** combining **Edge-Conditioned Spatial Graph Attention (ST-GAT)** and **Temporal Gated Recurrent Units (T-GRU)** for multi-horizon route disruption prediction and dynamic multi-hop routing.
 
 ```mermaid
 flowchart TD
-    ROUTE["Corridor Segment"] --> ASSESS["Assess Terrain, Slope & Weather Risk"]
-    ASSESS --> RES_SCORE["Calculate Resilience Score (0-100%)"]
-    RES_SCORE --> CLASSIFY{"Tactical Status"}
-    CLASSIFY -- "Resilience >= 80% & Disruption <= 25%" --> REC["RECOMMENDED (Green)"]
-    CLASSIFY -- "Resilience 50-79% or Disruption 26-50%" --> CAU["CAUTION (Amber)"]
-    CLASSIFY -- "Resilience < 50% or Disruption > 50%" --> AVOID["AVOID / BLOCKED (Red)"]
-    AVOID --> REROUTE["Auto-Trigger Tactical Bypass Routing"]
+    subgraph ST_GNN ["SPATIAL-TEMPORAL GRAPH NEURAL NETWORK (ST-GNN) PIPELINE"]
+        direction TB
+        G_INPUT["Frontier Graph Topology G = (V, E, W)"] --> FEAT_NODE["Node Feature Matrix X_t (8D: Elev, Temp, Snow, Wind, Readiness, Stock)"]
+        G_INPUT --> FEAT_EDGE["Edge Feature Tensor E_t (6D: Gradient, Roughness, Capacity, Threat, Blockage)"]
+        
+        FEAT_NODE --> GAT["Spatial Graph Attention Layer (Spatial-GAT with Edge Conditioning)"]
+        FEAT_EDGE --> GAT
+        
+        GAT --> TGRU["Temporal Gated Recurrent Unit (T-GRU Temporal Sequence Cell)"]
+        
+        TGRU --> HEADS["Multi-Horizon Disruption Projection Heads (T+1h, T+6h, T+12h, T+24h, T+48h)"]
+        
+        HEADS --> ATTR["Integrated Factor Attribution Engine<br/>(Avalanche, Landslide, Blizzard, Engine Hypoxia, Jamming, Chokepoint)"]
+        HEADS --> COST["Dynamic Risk Cost Surface C_uv(t)"]
+        
+        COST --> DIJKSTRA["Multi-Hop Resilient Path Solver (Dijkstra / A*)"]
+        DIJKSTRA --> RES_OUT["Optimal Resilient Route + Tactical Fallback Corridor"]
+    end
 ```
+
+### 12.1 Mathematical Formulation of ST-GNN Layers
+
+#### 1. Spatial Graph Attention Weight:
+$$\alpha_{uv}^{(k)} = \frac{\exp\left(\text{LeakyReLU}\left(\mathbf{a}_{\text{src}}^T \mathbf{W}_v \mathbf{h}_u + \mathbf{a}_{\text{dst}}^T \mathbf{W}_v \mathbf{h}_v + \mathbf{a}_{\text{edge}}^T \mathbf{W}_e \mathbf{e}_{uv}\right)\right)}{\sum_{w \in \mathcal{N}(u)} \exp\left(\text{LeakyReLU}\left(\mathbf{a}_{\text{src}}^T \mathbf{W}_v \mathbf{h}_u + \mathbf{a}_{\text{dst}}^T \mathbf{W}_v \mathbf{h}_w + \mathbf{a}_{\text{edge}}^T \mathbf{W}_e \mathbf{e}_{uw}\right)\right)}$$
+
+#### 2. Temporal Gated Recurrent Dynamic Update (T-GRU):
+$$\mathbf{z}_t = \sigma(\mathbf{W}_z \mathbf{H}_t + \mathbf{U}_z \mathbf{S}_{t-1}), \quad \mathbf{r}_t = \sigma(\mathbf{W}_r \mathbf{H}_t + \mathbf{U}_r \mathbf{S}_{t-1})$$
+$$\mathbf{S}_t = (1 - \mathbf{z}_t) \odot \mathbf{S}_{t-1} + \mathbf{z}_t \odot \tanh(\mathbf{W}_h \mathbf{H}_t + \mathbf{U}_h (\mathbf{r}_t \odot \mathbf{S}_{t-1}))$$
+
+#### 3. Multi-Horizon Disruption Projection:
+$$\hat{P}_{\text{disrupt}}(e_{uv}, t+\Delta t) = \sigma\left( \mathbf{W}_{\text{head},\Delta t} [\mathbf{S}_u(t) \,\|\, \mathbf{S}_v(t) \,\|\, \mathbf{E}_{uv}] \right) \quad \text{for } \Delta t \in \{+1\text{h}, +6\text{h}, +12\text{h}, +24\text{h}, +48\text{h}\}$$
+
+#### 4. Dynamic Risk Cost Objective Surface:
+$$C_{uv}(t) = d_{uv} \cdot \left( 1.0 + \lambda_1 \cdot \hat{P}_{\text{disrupt}}(e_{uv}, t) + \lambda_2 \cdot \frac{|\Delta h_{uv}|}{d_{uv}} + \lambda_3 \cdot \Omega_{\text{weather}}(t) \right)$$
+
 
 ---
 
@@ -617,7 +635,9 @@ The FastAPI server exposes REST endpoints serving all analytics, predictions, an
 | `GET` | `/api/fleet` | Returns active transport convoy assets |
 | `GET` | `/api/historical-cases` | Returns historical validation case studies |
 | `GET` | `/api/synthetic-explainer` | Returns mathematical formulations and documentation |
-| `POST` | `/api/synthetic-explainer/simulate` | Interactive physics formula simulator |
+| `POST` | `/api/gnn/predict-disruptions` | Runs ST-GNN multi-horizon route disruption prediction |
+| `POST` | `/api/gnn/optimal-route` | Computes dynamic multi-hop GNN resilient route with fallback |
+| `GET` | `/api/gnn/model-architecture` | Returns GNN neural specifications, layers, and validation metrics |
 | `POST` | `/api/recommendations/apply` | Commits recommendation into operational tasking orders |
 
 ---

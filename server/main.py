@@ -31,6 +31,7 @@ from engine.synthetic_explainer import (
     get_synthetic_engine_architecture,
     simulate_interactive_synthetic
 )
+from engine.gnn_routing import gnn_engine, get_gnn_model_architecture
 
 app = FastAPI(
     title="LOGISCOPE API",
@@ -64,6 +65,23 @@ class SyntheticSimulateRequest(BaseModel):
     weather: str = "SNOW_ICE"
     sensor_noise_pct: float = 3.5
     troops: int = 500
+
+class GNNPredictionRequest(BaseModel):
+    theater: Optional[str] = "ALL"
+    variation: Optional[str] = "STANDARD"
+    weather_condition: Optional[str] = "NORMAL"
+    threat_level: str = "NORMAL"
+    seismic_trigger: bool = False
+    blocked_route_ids: List[str] = []
+
+class GNNOptimalRouteRequest(BaseModel):
+    theater: Optional[str] = "ALL"
+    variation: Optional[str] = "STANDARD"
+    source_node_id: str
+    target_node_id: str
+    weather_condition: Optional[str] = "NORMAL"
+    threat_level: str = "NORMAL"
+    blocked_route_ids: List[str] = []
 
 @app.get("/")
 def root():
@@ -246,6 +264,37 @@ def apply_recommendation(req: ApplyRecommendationRequest):
         "message": f"Optimization action {req.recommendation_id} executed and committed to operational tasking orders.",
         "timestamp": "2026-10-02T15:04:12Z"
     }
+
+@app.get("/api/gnn/model-architecture")
+def get_gnn_specs():
+    return get_gnn_model_architecture()
+
+@app.post("/api/gnn/predict-disruptions")
+def predict_gnn_disruptions(req: GNNPredictionRequest):
+    nodes = get_nodes_by_theater(req.theater, req.variation)
+    routes = get_routes_by_theater(req.theater, req.variation)
+    return gnn_engine.forward(
+        nodes=nodes,
+        routes=routes,
+        weather_override=req.weather_condition,
+        blocked_route_ids=req.blocked_route_ids,
+        threat_level=req.threat_level,
+        seismic_trigger=req.seismic_trigger
+    )
+
+@app.post("/api/gnn/optimal-route")
+def compute_gnn_route(req: GNNOptimalRouteRequest):
+    nodes = get_nodes_by_theater(req.theater, req.variation)
+    routes = get_routes_by_theater(req.theater, req.variation)
+    return gnn_engine.compute_gnn_optimal_route(
+        nodes=nodes,
+        routes=routes,
+        source_node_id=req.source_node_id,
+        target_node_id=req.target_node_id,
+        weather_override=req.weather_condition,
+        threat_level=req.threat_level,
+        blocked_route_ids=req.blocked_route_ids
+    )
 
 if __name__ == "__main__":
     import os
