@@ -15,7 +15,10 @@ import {
   SyntheticSimulateResult 
 } from '../types';
 
-const SERVER_API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api').replace(/\/$/, '');
+const SERVER_API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.DEV ? 'http://localhost:8000/api' : 'https://logiscope-ai.onrender.com/api')
+).replace(/\/$/, '');
 
 export async function fetchTheaters(): Promise<TheaterMetadata[]> {
   const res = await fetch(`${SERVER_API_BASE_URL}/theaters`);

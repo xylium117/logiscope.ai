@@ -36,6 +36,8 @@ jobs:
 
       - name: Build Static Distribution
         run: cd client && npm run build
+        env:
+          VITE_API_BASE_URL: https://logiscope-ai.onrender.com/api
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
