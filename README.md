@@ -2,13 +2,13 @@
 
 > Predictive Logistics Intelligence and Decision-Support Platform
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI_0.110-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/Frontend-React_19_TypeScript-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
-[![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind_CSS-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![Leaflet](https://img.shields.io/badge/GIS-Leaflet_Esri-199900.svg?logo=leaflet&logoColor=white)](https://leafletjs.com)
-[![Render Backend](https://img.shields.io/badge/Hosted_API-Render-46E3B7.svg?logo=render&logoColor=white)](https://logiscope-ai.onrender.com)
-[![GitHub Pages](https://img.shields.io/badge/Deployment-GitHub_Pages-222222.svg?logo=github-actions&logoColor=white)](https://xylium117.github.io/logiscope.ai/)
+[![MIT License](https://img.shields.io/badge/MIT_License-MIT-blue.svg?logo=opensourceinitiative\&logoColor=white)](LICENSE)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110-009688.svg?logo=fastapi\&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-19-61DAFB.svg?logo=react\&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg?logo=typescript\&logoColor=white)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC.svg?logo=tailwindcss\&logoColor=white)](https://tailwindcss.com)
+[![Leaflet](https://img.shields.io/badge/Leaflet-1.9-199900.svg?logo=leaflet\&logoColor=white)](https://leafletjs.com)
+[![Render](https://img.shields.io/badge/Render-Cloud-46E3B7.svg?logo=render\&logoColor=white)](https://render.com)
 
 ---
 
