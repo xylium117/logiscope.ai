@@ -798,19 +798,25 @@ flowchart LR
 ```
 
 ### 25.1 Spatial-Temporal Graph Neural Network (ST-GNN)
+
 LOGISCOPE executes an inductive ST-GNN on the dynamic network graph $\mathcal{G} = (\mathcal{V}, \mathcal{E}, \mathbf{W})$:
 
-* **Spatial Attention Head (Spatial-GAT)**:
+#### Spatial Attention Head (Spatial-GAT)
+
 $$\alpha_{uv}^{(k)} = \frac{\exp\left(\text{LeakyReLU}\left(\mathbf{a}_{\text{src}}^T \mathbf{W}_v \mathbf{h}_u + \mathbf{a}_{\text{dst}}^T \mathbf{W}_v \mathbf{h}_v + \mathbf{a}_{\text{edge}}^T \mathbf{W}_e \mathbf{e}_{uv}\right)\right)}{\sum_{w \in \mathcal{N}(u)} \exp\left(\text{LeakyReLU}\left(\mathbf{a}_{\text{src}}^T \mathbf{W}_v \mathbf{h}_u + \mathbf{a}_{\text{dst}}^T \mathbf{W}_v \mathbf{h}_w + \mathbf{a}_{\text{edge}}^T \mathbf{W}_e \mathbf{e}_{uw}\right)\right)}$$
 
-* **Temporal Gated Recurrent Dynamic State (T-GRU)**:
+#### Temporal Gated Recurrent Dynamic State (T-GRU)
+
 $$\mathbf{z}_t = \sigma(\mathbf{W}_z \mathbf{H}_t + \mathbf{U}_z \mathbf{S}_{t-1}), \quad \mathbf{r}_t = \sigma(\mathbf{W}_r \mathbf{H}_t + \mathbf{U}_r \mathbf{S}_{t-1})$$
-$$\mathbf{S}_t = (1 - \mathbf{z}_t) \odot \mathbf{S}_{t-1} + \mathbf{z}_t \odot \tanh(\mathbf{W}_h \mathbf{H}_t + \mathbf{U}_h (\mathbf{r}_t \odot \mathbf{S}_{t-1}))$$
 
-* **Multi-Horizon Disruption Projection**:
-$$\hat{P}_{\text{disrupt}}(e_{uv}, t+\Delta t) = \sigma\left( \mathbf{W}_{\text{head},\Delta t} [\mathbf{S}_u(t) \,\|\, \mathbf{S}_v(t) \,\|\, \mathbf{E}_{uv}] \right) \quad \text{for } \Delta t \in \{+1\text{h}, +6\text{h}, +12\text{h}, +24\text{h}, +48\text{h}\}$$
+$$\mathbf{S}_t = (1 - \mathbf{z}_t) \odot \mathbf{S}_{t-1} + \mathbf{z}_t \odot \tanh\!\left(\mathbf{W}_h \mathbf{H}_t + \mathbf{U}_h \left(\mathbf{r}_t \odot \mathbf{S}_{t-1}\right)\right)$$
 
-* **Dynamic Resilient Cost Surface for Multi-Hop Dijkstra Optimization**:
+#### Multi-Horizon Disruption Projection
+
+$$\hat{P}_{\text{disrupt}}(e_{uv},\, t+\Delta t) = \sigma\!\left( \mathbf{W}_{\text{head},\Delta t} \left[\mathbf{S}_u(t) \;\|\; \mathbf{S}_v(t) \;\|\; \mathbf{E}_{uv}\right] \right) \quad \text{for } \Delta t \in \{+1\text{h},\, +6\text{h},\, +12\text{h},\, +24\text{h},\, +48\text{h}\}$$
+
+#### Dynamic Resilient Cost Surface for Multi-Hop Dijkstra Optimization
+
 $$C_{uv}(t) = d_{uv} \cdot \left( 1.0 + 4.5 \cdot \hat{P}_{\text{disrupt}}(e_{uv}, t) + 1.2 \cdot \frac{|\Delta h_{uv}|}{d_{uv}} + 0.8 \cdot \Omega_{\text{weather}}(t) \right)$$
 
 ### 25.2 Anomaly Radar Formula
