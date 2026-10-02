@@ -75,9 +75,8 @@ export const RunForecastModal: React.FC<RunForecastModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-command-card border border-command-accent/60 rounded-2xl shadow-glow-cyan overflow-hidden p-6 md:p-8 font-mono">
-        {/* Close Button */}
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto">
+      <div className="relative w-full max-w-2xl bg-command-card border border-command-accent/60 rounded-2xl shadow-glow-cyan p-6 md:p-8 font-mono max-h-[90vh] overflow-y-auto my-auto">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
@@ -85,7 +84,6 @@ export const RunForecastModal: React.FC<RunForecastModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        {/* Modal Header */}
         <div className="flex items-center space-x-3 mb-6">
           <div className="p-3 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400">
             <Sparkles className="w-6 h-6 animate-pulse" />
@@ -101,7 +99,6 @@ export const RunForecastModal: React.FC<RunForecastModalProps> = ({
         </div>
 
         {step === 1 ? (
-          /* Live Computation Progress */
           <div className="py-8 space-y-6 text-center">
             <div className="flex justify-center">
               <div className="relative w-20 h-20 rounded-full border-4 border-cyan-500/20 border-t-cyan-400 animate-spin flex items-center justify-center">
@@ -130,9 +127,7 @@ export const RunForecastModal: React.FC<RunForecastModalProps> = ({
             </div>
           </div>
         ) : (
-          /* Completed WOW Summary */
           <div className="space-y-6">
-            {/* KPI Stat Ribbon */}
             <div className="grid grid-cols-3 gap-3">
               <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800">
                 <div className="text-[10px] text-slate-400 uppercase">Network Scale</div>
@@ -157,7 +152,6 @@ export const RunForecastModal: React.FC<RunForecastModalProps> = ({
               </div>
             </div>
 
-            {/* Core Finding Callout */}
             <div className="p-4 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-xs space-y-2">
               <div className="flex items-center space-x-2 text-cyan-300 font-bold">
                 <CheckCircle2 className="w-4 h-4 text-cyan-400" />

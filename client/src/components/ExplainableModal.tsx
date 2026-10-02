@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  HelpCircle, 
-  CheckCircle, 
-  X, 
-  ShieldCheck, 
-  ArrowRight, 
-  TrendingUp, 
+import {
+  HelpCircle,
+  CheckCircle,
+  X,
+  ShieldCheck,
+  ArrowRight,
+  TrendingUp,
   Sparkles,
   Zap
 } from 'lucide-react';
@@ -45,8 +45,8 @@ export const ExplainableModal: React.FC<ExplainableModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl bg-command-card border border-cyan-500/50 rounded-2xl shadow-glow-cyan overflow-hidden p-6 md:p-8 font-mono">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto">
+      <div className="relative w-full max-w-xl bg-command-card border border-cyan-500/50 rounded-2xl shadow-glow-cyan p-6 md:p-8 font-mono max-h-[90vh] overflow-y-auto my-auto">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
@@ -54,7 +54,6 @@ export const ExplainableModal: React.FC<ExplainableModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        {/* Modal Header */}
         <div className="flex items-center space-x-3 mb-5">
           <div className="p-3 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400">
             <HelpCircle className="w-6 h-6 animate-pulse" />
@@ -62,7 +61,7 @@ export const ExplainableModal: React.FC<ExplainableModalProps> = ({
           <div>
             <div className="flex items-center space-x-2">
               <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                EXPLAINABLE AI REASONING
+                AI REASONING
               </span>
               <span className="text-[10px] font-bold text-emerald-400">
                 {recommendation.confidence_score}% CONFIDENCE
@@ -74,13 +73,11 @@ export const ExplainableModal: React.FC<ExplainableModalProps> = ({
           </div>
         </div>
 
-        {/* Action Summary Box */}
         <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 space-y-1 mb-5">
           <div className="text-[10px] uppercase font-bold text-cyan-400">RECOMMENDED ACTION:</div>
           <p className="font-sans leading-relaxed text-sm text-slate-100">{recommendation.action_summary}</p>
         </div>
 
-        {/* "WHY?" Reasoning Section */}
         <div className="space-y-4 mb-6">
           <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-2">
             <Sparkles className="w-4 h-4 text-cyan-400" />
@@ -100,7 +97,6 @@ export const ExplainableModal: React.FC<ExplainableModalProps> = ({
           </div>
         </div>
 
-        {/* Impact & Key Metrics */}
         <div className="grid grid-cols-3 gap-2.5 mb-6 text-center font-mono">
           {Object.entries(recommendation.explanation.key_metrics || {}).map(([key, val], idx) => (
             <div key={idx} className="p-2.5 rounded-lg bg-cyan-950/30 border border-cyan-500/20">
@@ -110,7 +106,6 @@ export const ExplainableModal: React.FC<ExplainableModalProps> = ({
           ))}
         </div>
 
-        {/* Footer actions */}
         <div className="flex items-center justify-between pt-2 border-t border-slate-800">
           <div className="text-[11px] text-slate-400 font-mono">
             STATUS: <span className="text-amber-400 font-bold">{recommendation.urgency}</span>
