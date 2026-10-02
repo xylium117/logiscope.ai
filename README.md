@@ -1,4 +1,4 @@
-# LOGISCOPE
+# Logiscope.ai
 
 > Predictive Logistics Intelligence and Decision-Support Platform
 
@@ -819,4 +819,4 @@ This project is licensed under the **MIT License**. See the `LICENSE` file for d
 
 ---
 
-*LOGISCOPE — Predictive Logistics Intelligence & Decision Support Platform.*
+*Logiscope.ai — Predictive Logistics Intelligence & Decision Support Platform.*
