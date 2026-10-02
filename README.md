@@ -12,6 +12,54 @@
 
 ---
 
+## Table of Contents
+
+- [1. Abstract](#1-abstract)
+- [2. Problem Statement](#2-problem-statement)
+- [3. System Objectives](#3-system-objectives)
+- [4. Core Capabilities](#4-core-capabilities)
+- [5. System Architecture](#5-system-architecture)
+- [6. Logistics Digital Twin](#6-logistics-digital-twin)
+- [7. Data Sources](#7-data-sources)
+- [8. Data Ingestion](#8-data-ingestion)
+- [9. Demand Forecasting](#9-demand-forecasting)
+- [10. Inventory Intelligence](#10-inventory-intelligence)
+- [11. Transportation Intelligence](#11-transportation-intelligence)
+- [12. GIS and Terrain Analysis](#12-gis-and-terrain-analysis)
+- [13. Weather Intelligence](#13-weather-intelligence)
+- [14. Predictive Risk Analysis](#14-predictive-risk-analysis)
+- [15. Optimization Engine](#15-optimization-engine)
+- [16. Scenario Simulation](#16-scenario-simulation)
+- [17. AI Recommendations](#17-ai-recommendations)
+- [18. Visualization Interface](#18-visualization-interface)
+  - [18.1 Command Dashboard](#181-command-dashboard)
+  - [18.2 GIS Operations Map](#182-gis-operations-map)
+  - [18.3 Inventory Dashboard](#183-inventory-dashboard)
+  - [18.4 Transport Dashboard](#184-transport-dashboard)
+  - [18.5 Prediction Center](#185-prediction-center)
+  - [18.6 Simulation Lab](#186-simulation-lab)
+- [19. Alert and Event System](#19-alert-and-event-system)
+- [20. REST API](#20-rest-api)
+- [21. Project Structure](#21-project-structure)
+- [22. Installation](#22-installation)
+  - [22.1 Prerequisites](#221-prerequisites)
+  - [22.2 Local Development](#222-local-development)
+  - [22.3 Windows Launcher](#223-windows-launcher)
+- [23. Docker and Containerization](#23-docker-and-containerization)
+- [24. Configuration](#24-configuration)
+- [25. Machine Learning and Mathematical Algorithms](#25-machine-learning-and-mathematical-algorithms)
+  - [25.1 Anomaly Radar Formula](#251-anomaly-radar-formula)
+- [26. Model Training and Retraining](#26-model-training-and-retraining)
+- [27. Testing and Validation](#27-testing-and-validation)
+- [28. Deployment](#28-deployment)
+- [29. Performance Considerations](#29-performance-considerations)
+- [30. Security and Operational Privacy (OPSEC)](#30-security-and-operational-privacy-opsec)
+- [31. Limitations](#31-limitations)
+- [32. Future Development](#32-future-development)
+- [33. License](#33-license)
+
+---
+
 ## 1. Abstract
 
 LOGISCOPE is a web-based predictive logistics intelligence and tactical decision-support platform engineered to support planning, monitoring, and proactive disruption mitigation across distributed supply networks operating in geographically dispersed, high-altitude, and environmentally vulnerable frontiers.
@@ -34,32 +82,43 @@ Conventional supply-chain and military distribution networks rely on disparate, 
 * **Volatile Route Accessibility**: Critical corridors are subject to seasonal pass closures, rockfalls, blizzards, and flash floods.
 * **Manual and Reactive Scheduling**: Rerouting and fleet reallocation happen reactively after stocks have breached critical safety thresholds.
 
-```text
-CONVENTIONAL APPROACH (REACTIVE & SILOED)
+### Workflow Comparison
 
-Inventory Data ─────┐
-Consumption Logs ───┤
-Fleet Schedules ────┤ ───> Disconnected Systems ───> Delayed Assessment ───> Reactive Emergency
-Weather Reports ────┤                                                          Airdrops / Stockouts
-Terrain Maps ───────┘
+```mermaid
+flowchart TD
+    subgraph Conventional ["Conventional Approach: Siloed & Reactive"]
+        direction TB
+        C1["Inventory Records"]
+        C2["Consumption Logs"]
+        C3["Fleet Schedules"]
+        C4["Weather Forecasts"]
+        C5["Paper Route Maps"]
+        C1 --> CS["Separate Unlinked Systems"]
+        C2 --> CS
+        C3 --> CS
+        C4 --> CS
+        C5 --> CS
+        CS --> CD["Delayed Manual Assessment"]
+        CD --> CR["Reactive Stockout & Emergency Airdrops"]
+    end
+```
 
-─────────────────────────────────────────────────────────────────────────────────────────────
-
-LOGISCOPE APPROACH (UNIFIED & PREDICTIVE)
-
-Telemetry + GIS + Weather + Consumption Logs
-                    │
-                    ▼
-       Logistics Digital Twin Model
-                    │
-                    ▼
-     Predictive Analytics & Anomaly Radar
-                    │
-                    ▼
-  Constraint-Based Mixed-Integer Optimization
-                    │
-                    ▼
- Explainable Proactive Decision Support (C2 Interface)
+```mermaid
+flowchart TD
+    subgraph LogiscopeFlow ["LOGISCOPE Approach: Unified & Predictive"]
+        direction TB
+        L1["IoT Sensors & Telemetry"]
+        L2["Live Consumption Feeds"]
+        L3["GIS Vector Topologies"]
+        L4["Meteorological Risk Data"]
+        L1 --> LT["Logistics Digital Twin"]
+        L2 --> LT
+        L3 --> LT
+        L4 --> LT
+        LT --> LP["Predictive Analytics & Anomaly Radar"]
+        LP --> LO["Constraint-Based MILP Optimizer"]
+        LO --> LC["Explainable Tactical Decision Support (C2)"]
+    end
 ```
 
 ---
@@ -78,7 +137,7 @@ The core engineering objectives of LOGISCOPE are designed to solve end-to-end su
 
 | Objective | System Component | Mathematical / Technical Basis |
 | :--- | :--- | :--- |
-| **Demand Forecasting** | ML Time-Series Engine | Multivariate Regression with Environmental Multipliers |
+| **Demand Prediction** | ML Time-Series Engine | Multivariate Regression with Environmental Multipliers |
 | **Route Assessment** | GIS Route Intelligence | Dynamic Surface Friction & Infrastructure Hardening Model |
 | **Shortage Detection** | Predictive Risk Engine | Cumulative Burn Curve & Safety Threshold Horizon Scan |
 | **Anomaly Radar** | Statistical Telemetry Filter | Normalized Gaussian $Z$-Score Anomaly Interceptor |
@@ -89,26 +148,33 @@ The core engineering objectives of LOGISCOPE are designed to solve end-to-end su
 
 ## 4. Core Capabilities
 
-### 4.1 Predictive Analytics
-* **7-Day Dynamic Demand Projections**: Continuously updated consumption curves with autoregressive uncertainty propagation ($\sigma_{\text{cum}} = \sigma \cdot t^{0.65}$).
-* **Depletion and Breach Timing**: Precise calculation of hours-to-safety-breach ($T_{\text{breach}}$) and hours-to-zero-stock ($T_{\text{stockout}}$).
-* **Dynamic Route ETAs**: Real-time travel time adjustments based on surface conditions and altitude resistance.
-* **Telemetry Anomaly Detection**: Real-time isolation of unlogged fuel draws, pipeline leaks, cold-chain temperature excursions, and load discrepancy events.
-
-### 4.2 Logistics Management
-* **Multi-Echelon Network Visibility**: Hierarchical tracking across Main Supply Depots, Forward Logistics Hubs, and Frontline Units.
-* **5-Class Supply Taxonomy**: Specialized accounting for Class III (Fuel in kL), Class V (Ammunition in Tons), Class I (Rations in Pallets), Class VIII (Medical in Kits), and Class IX (Spare Parts in Crates).
-* **Fleet Asset Tracking**: Live status, payload capacity, assigned corridors, and fuel reserves for Heavy Convoys, Tactical 4x4 Columns, and Air Transport units.
-
-### 4.3 Geospatial Intelligence (GIS)
-* **Tactical Cartographic Engine**: Interactive Leaflet GIS with Esri Dark Canvas, Satellite Imagery, and Topographic Hillshade overlays.
-* **Dynamic Corridor Resilience Scoring**: Color-coded tactical route health (Recommended, Caution, Avoid/Blocked) computed from real-time environmental risk.
-* **High-Altitude Elevation Profiling**: Continuous modeling of vehicle velocity degradation across passes exceeding 3,500m to 5,500m MSL.
-
-### 4.4 Tactical Decision Support
-* **Automated Pre-Positioning Orders**: Proactive stock transfer recommendations from surplus hubs to deficit nodes before forecasted weather windows close.
-* **Tactical Corridor Diversions**: Autonomous detection of bottlenecks with optimal bypass rerouting.
-* **What-If Contingency Sandbox**: Interactive scenario generator with side-by-side unmitigated vs. AI-mitigated combat readiness comparisons.
+```mermaid
+mindmap
+  root((LOGISCOPE))
+    Predictive Analytics
+      7-Day Demand Forecast
+      Inventory Depletion Timing
+      Shortage Risk Prediction
+      Dynamic ETA Calculation
+      Telemetry Anomaly Radar
+    Logistics Management
+      Multi-Echelon Tracking
+      5-Class Supply Accounting
+      Depot & Hub Balancing
+      Fleet Lift Allocation
+      Transit Corridor Health
+    Geospatial Intelligence
+      Tactical GIS Cartography
+      Esri Dark & Topo Layers
+      Altitude & Slope Friction
+      Corridor Resilience Scoring
+      Dynamic Detour Routing
+    Decision Support
+      Pre-Positioning Orders
+      What-If Contingency Sandbox
+      Audit Trails & Rationales
+      Historical Case Validation
+```
 
 ---
 
@@ -117,13 +183,13 @@ The core engineering objectives of LOGISCOPE are designed to solve end-to-end su
 LOGISCOPE is built on a decoupled, high-performance architecture utilizing a React/TypeScript frontend client communicating with a FastAPI Python analytical backend.
 
 ```mermaid
-graph TD
+flowchart TD
     subgraph Client ["Client Presentation Tier (React 19 + TypeScript + Vite)"]
         UI["C2 Command Dashboard"]
-        MAP["GIS Operations Map (Leaflet / Esri Tiles)"]
+        MAP["GIS Operations Map (Leaflet / Esri)"]
         SIM_UI["Simulation Lab & What-If Studio"]
         SYN_UI["Mathematical Foundations & KaTeX Engine"]
-        API_SVC["REST API Client (Axios / Fetch)"]
+        API_SVC["REST API Client Service"]
     end
 
     subgraph Server ["Server Analytical Tier (Python / FastAPI)"]
@@ -142,9 +208,9 @@ graph TD
     end
 
     subgraph Data ["Data & Telemetry Layer"]
-        ENV_DATA["Meteorological & Environmental feeds"]
+        ENV_DATA["Meteorological Feeds"]
         IOT_FEED["Ultrasonic, Thermal & RFID Sensor Stream"]
-        GEO_DATA["Geospatial Vector Topologies & Elevation Data"]
+        GEO_DATA["Geospatial Topologies & Elevation DEM"]
     end
 
     UI --> API_SVC
@@ -152,7 +218,7 @@ graph TD
     SIM_UI --> API_SVC
     SYN_UI --> API_SVC
 
-    API_SVC -->|HTTP REST JSON| API_ROUTER
+    API_SVC --> API_ROUTER
 
     API_ROUTER --> TWIN
     API_ROUTER --> FORECAST
@@ -180,21 +246,34 @@ graph TD
 
 The platform maintains an in-memory, high-fidelity digital representation of the distributed supply infrastructure across three primary Indian frontier operational sectors:
 
-```text
-                           LOGISTICS DIGITAL TWIN REGISTRY
-
-                                  Frontier Theaters
-                                          │
-            ┌─────────────────────────────┼─────────────────────────────┐
-            ↓                             ↓                             ↓
-    NORTHERN SECTOR               CENTRAL HIMALAYAS               EASTERN SECTOR
-  (Ladakh & Kashmir)                (Uttarakhand)             (Arunachal & Sikkim)
-  • Leh Central Depot              • Rishikesh Depot           • Guwahati Main Depot
-  • Kargil Staging Hub             • Joshimath Logistics Hub   • Tezpur Sector Hub
-  • Dras Intermediary Hub          • Dharchula Staging Post    • Bomdila Transshipment
-  • Siachen Base Camp              • Mana High Pass Outpost    • Sela Pass Waypoint
-  • Daulat Beg Oldie (DBO)         • Niti Border Post          • Tawang Garrison
-  • Pangong Defense Post                                       • Kibithu Frontier Post
+```mermaid
+flowchart TD
+    subgraph Registry ["LOGISTICS DIGITAL TWIN REGISTRY"]
+        direction TB
+        ROOT["Frontier Command Theaters"]
+        
+        NORTH["Northern Frontier<br/>(Ladakh & Kashmir)"]
+        CENTRAL["Central Himalayas<br/>(Uttarakhand)"]
+        EAST["Eastern Frontier<br/>(Arunachal & Sikkim)"]
+        
+        ROOT --> NORTH
+        ROOT --> CENTRAL
+        ROOT --> EAST
+        
+        NORTH --> N1["Leh Central Depot"]
+        NORTH --> N2["Kargil Staging Hub"]
+        NORTH --> N3["Siachen Base Camp"]
+        NORTH --> N4["Daulat Beg Oldie Outpost"]
+        
+        CENTRAL --> C1["Rishikesh Main Depot"]
+        CENTRAL --> C2["Joshimath Logistics Hub"]
+        CENTRAL --> C3["Mana High Pass Outpost"]
+        
+        EAST --> E1["Guwahati Base Depot"]
+        EAST --> E2["Tezpur Sector Hub"]
+        EAST --> E3["Tawang Sector Garrison"]
+        EAST --> E4["Kibithu Frontier Post"]
+    end
 ```
 
 ### Digital Twin State Variables
@@ -223,20 +302,15 @@ LOGISCOPE models multi-source inputs incorporating telemetry, terrain topographi
 
 ## 8. Data Ingestion
 
-```text
-  Raw Data Streams (IoT Sensors / GPS Telemetry / Meteorological Feeds)
-                               │
-                               ▼
-            Validation & Schema Integrity Checks (Pydantic)
-                               │
-                               ▼
-        Coordinate Transformation & Elevation Normalization
-                               │
-                               ▼
-          State Reconciliation in Logistics Digital Twin
-                               │
-                               ▼
-   Event Dispatcher (Shortage Triggers, Anomaly Detection, Forecast Refresh)
+```mermaid
+flowchart TD
+    RAW["Raw Data Streams<br/>(IoT Sensors / GPS / Meteorological Feeds)"] --> VAL["Pydantic Schema Validation & Typing"]
+    VAL --> NORM["Coordinate & Elevation Normalization"]
+    NORM --> RECON["Digital Twin State Reconciliation"]
+    RECON --> DISP["Event Dispatcher"]
+    DISP --> EV1["Shortage Trigger Check"]
+    DISP --> EV2["Z-Score Anomaly Scan"]
+    DISP --> EV3["Demand Forecast Horizon Refresh"]
 ```
 
 1. **Schema Validation**: All inbound telemetry events and scenario parameters are validated through strict Pydantic models.
@@ -250,6 +324,23 @@ LOGISCOPE models multi-source inputs incorporating telemetry, terrain topographi
 LOGISCOPE executes multivariate time-series demand forecasting incorporating operational tempo scalars, weather degradation factors, and high-altitude physics penalties:
 
 $$\text{Demand}_i(t) = \text{BaseRate}_i \cdot M_{\text{tempo}} \cdot M_{\text{weather}} \cdot M_{\text{altitude}} \cdot M_{\text{surge}} + \epsilon(t)$$
+
+```mermaid
+flowchart LR
+    HIST["Historical Consumption Logs"] --> FEAT["Feature Engineering Multipliers"]
+    FEAT --> T_M["Tempo Scalar (M_tempo)"]
+    FEAT --> W_M["Weather Stress (M_weather)"]
+    FEAT --> A_M["Altitude Drag (M_altitude)"]
+    FEAT --> S_M["Demand Surge (M_surge)"]
+    
+    T_M --> COMP["Composite Demand Rate"]
+    W_M --> COMP
+    A_M --> COMP
+    S_M --> COMP
+    
+    COMP --> PROJ["7-Day Projection Curve"]
+    PROJ --> CI["Autoregressive Uncertainty (95% CI)"]
+```
 
 ### Parameters and Multipliers
 
@@ -268,20 +359,6 @@ $$M_{\text{altitude}} = 1.0 + \max\left(0, \frac{\text{Elevation} - 1000\text{m}
 * **Confidence Intervals (95% CI)**:
 $$\text{CI}_{95\%}(t) = \text{ProjectedStock}(t) \pm 1.96 \cdot \left(\text{BurnRate} \cdot 0.09 \cdot t^{0.65}\right)$$
 
-```text
-Stock Level (kL)
- 6000 ┬────────────────────────────────────────────────
-      │ ●  Current Stock: 6,200 kL
- 4500 ┼───-─-─-
-      │        \
- 3000 ┼─────────\────────────────────────────────────── Upper 95% Bound
-      │          \        ............................ Projected Median
- 1500 ┼───────────\──────----------------------------- Lower 95% Bound
-      │            \     |
-    0 ┴─────────────\────┴─────────────────────────────
-      Day 0       Day 2  Day 4       Day 6       Day 7
-```
-
 ---
 
 ## 10. Inventory Intelligence
@@ -295,11 +372,21 @@ $$T_{\text{breach}} = \max\left(0, \frac{S_{\text{current}} - S_{\text{safety}}}
 * **Time to Zero Stockout**:
 $$T_{\text{stockout}} = \frac{S_{\text{current}}}{\text{DailyBurnRate}} \times 24\text{ hours}$$
 
-### Alert Severity Hierarchy
-* $\text{CRITICAL}$: $T_{\text{breach}} \le 24\text{ hours}$ or $T_{\text{stockout}} \le 72\text{ hours}$
-* $\text{HIGH}$: $24\text{ hours} < T_{\text{breach}} \le 48\text{ hours}$
-* $\text{MEDIUM}$: $48\text{ hours} < T_{\text{breach}} \le 96\text{ hours}$
-* $\text{NOMINAL}$: $T_{\text{breach}} > 96\text{ hours}$
+```mermaid
+flowchart TD
+    START_INV["Current Inventory Level (S_current)"] --> BURN["Daily Burn Rate Calculation"]
+    BURN --> BREACH_CHECK{"Will Stock Drop Below Safety Threshold?"}
+    BREACH_CHECK -- Yes --> T_CALC["Compute Time to Breach (T_breach)"]
+    BREACH_CHECK -- No --> NOMINAL_ST["Status: NOMINAL (Safe Buffer)"]
+    
+    T_CALC --> SEV_CHECK{"Severity Evaluation"}
+    SEV_CHECK -- "T_breach <= 24h" --> CRIT["CRITICAL SEVERITY"]
+    SEV_CHECK -- "24h < T_breach <= 48h" --> HIGH_SEV["HIGH SEVERITY"]
+    SEV_CHECK -- "48h < T_breach <= 96h" --> MED_SEV["MEDIUM SEVERITY"]
+    
+    CRIT --> OPT_TRIG["Trigger Immediate Optimization Solver"]
+    HIGH_SEV --> OPT_TRIG
+```
 
 ---
 
@@ -311,9 +398,16 @@ LOGISCOPE models dynamic transport availability, fleet lift capacities, and tran
 * **Tactical High-Altitude Columns**: $75\text{ Tons}$ payload capacity; snow-chained 4x4 columns designed for steep mountain gradients and unpaved passes.
 * **Heavy-Lift Airhead (Helicopter/Air Transport)**: $45\text{ Tons}$ rapid response airlift for emergency medical plasma and critical ammunition drops when surface passes are blocked.
 
-```text
-Fleet Allocation Pipeline:
-Identify Shortage ──> Calculate Transfer Mass ──> Check Available Fleets ──> Select Corridor ──> Dispatch Order
+```mermaid
+flowchart LR
+    SHORTAGE["Identified Shortage"] --> TONNAGE["Calculate Deficit Mass (Tons)"]
+    TONNAGE --> FLEET_MATCH{"Match Fleet Capacity"}
+    FLEET_MATCH -->|Bulk Heavy Cargo| HC["Heavy All-Terrain Convoy (160T)"]
+    FLEET_MATCH -->|Rugged Mountain Route| TC["Tactical Truck Column (75T)"]
+    FLEET_MATCH -->|Urgent Pass Closure| AIR["Heavy-Lift Air Transport (45T)"]
+    HC --> ROUTE_ASSIGN["Assign Optimal Corridor & Dispatch"]
+    TC --> ROUTE_ASSIGN
+    AIR --> ROUTE_ASSIGN
 ```
 
 ---
@@ -331,22 +425,31 @@ Where:
 * $B_{\text{infra}}(r) = +20\%$ bonus for reinforced, all-weather infrastructure (e.g., Sela Tunnel, Atal Tunnel).
 * $S_{\text{terrain}}$ is the slope and elevation friction coefficient ($0.45$ to $1.00$).
 
-```text
-Tactical Corridor Classification:
-• RECOMMENDED (Green) : Resilience >= 80% and Disruption Prob <= 25%
-• CAUTION (Amber)     : Resilience 50% - 79% or Disruption Prob 26% - 50%
-• AVOID / BLOCKED (Red): Resilience < 50% or Disruption Prob > 50% or Road Blocked
+```mermaid
+flowchart TD
+    ROUTE["Corridor Segment"] --> ASSESS["Assess Terrain, Slope & Weather Risk"]
+    ASSESS --> RES_SCORE["Calculate Resilience Score (0-100%)"]
+    RES_SCORE --> CLASSIFY{"Tactical Status"}
+    CLASSIFY -- "Resilience >= 80% & Disruption <= 25%" --> REC["RECOMMENDED (Green)"]
+    CLASSIFY -- "Resilience 50-79% or Disruption 26-50%" --> CAU["CAUTION (Amber)"]
+    CLASSIFY -- "Resilience < 50% or Disruption > 50%" --> AVOID["AVOID / BLOCKED (Red)"]
+    AVOID --> REROUTE["Auto-Trigger Tactical Bypass Routing"]
 ```
 
 ---
 
 ## 13. Weather Intelligence
 
-Meteorological variables are integrated into dynamic risk multipliers:
-
-* **Precipitation Stress**: Torrential rains trigger flash flood and landslide multipliers on valley corridors ($1.35\times$ fuel burn, $-40\%$ convoy speed).
-* **Thermal Freeze Index**: Temperatures below $-15^\circ\text{C}$ trigger fuel heating and battery preservation protocols ($1.48\times$ fuel demand).
-* **Snowpack & Blizzard Closure**: Avalanche-prone corridors (e.g., Zojila Pass, Khardung La, Sela Pass) are flagged for automated bypass rerouting.
+```mermaid
+flowchart LR
+    WEATHER["Synoptic Meteorological Forecast"] --> M1["Precipitation & Flash Floods"]
+    WEATHER --> M2["Sub-Zero Freeze Index"]
+    WEATHER --> M3["Blizzard & Avalanche Hazard"]
+    
+    M1 -->|1.35x Fuel Burn / -40% Speed| R1["Valley Highway Degradation"]
+    M2 -->|1.48x Fuel Demand| R2["Thermal Heating Protocols"]
+    M3 -->|Corridor Blockage| R3["Automated Pass Bypass Divert"]
+```
 
 ---
 
@@ -378,24 +481,20 @@ $$\min \sum_{j \in \text{Nodes}} \left( W_{\text{deficit}} \cdot \Delta T_{\text
 
 The **Simulation Lab** enables tactical planners to inject synthetic stress vectors into the network and observe the unmitigated failure cascade versus AI-mitigated stabilization:
 
-```text
-SCENARIO STRESS INJECTION:
-• Operational Sector: Northern Frontier (Ladakh)
-• Weather Condition: Extreme Blizzard (SNOW_ICE)
-• Transport Degradation: 55% Fleet Availability (-45% shortfall)
-• Frontline Demand Surge: +60% Mobilization
-• Blocked Corridors: DS-DBO Strategic Arterial (Avalanche Closure)
-
-                  SIMULATION OUTCOME ENGINE
-                             │
-            ┌────────────────┴────────────────┐
-            ↓                                 ↓
-   WITHOUT AI MITIGATION             WITH AI MITIGATION (LOGISCOPE)
-   • 4 Frontline Stockouts           • 0 Stockouts (100% Avoided)
-   • Network Readiness: 54%          • Network Readiness: 89% (+35% Gain)
-   • DBO Stockout in 8.1 hrs         • Pre-positioned 415 kL Fuel via Bypass
-   • Siachen Medical Breach: 9.2 hrs • Pre-positioned 136 Kits from Kargil
-   • Combat Failure Risk: 42%        • Mission Success Confidence: 96.5%
+```mermaid
+flowchart TD
+    INJECT["Tactical Stress Injection<br/>(Blizzard + 60% Demand Surge + DS-DBO Blocked + -45% Fleet)"] --> SIM_ENGINE["Dual-Run Scenario Simulation Lab"]
+    
+    SIM_ENGINE --> UNMIT["Unmitigated Failure Cascade"]
+    SIM_ENGINE --> MIT["LOGISCOPE AI Mitigation"]
+    
+    UNMIT --> U1["4 Frontline Stockouts"]
+    UNMIT --> U2["Network Readiness Drops to 54%"]
+    UNMIT --> U3["Mission Failure Risk: 42%"]
+    
+    MIT --> M1["0 Stockouts (100% Avoided)"]
+    MIT --> M2["Pre-positioned 415 kL Fuel & 136 Med Kits"]
+    MIT --> M3["Network Readiness Stabilized at 89% (+35%)"]
 ```
 
 ---
@@ -588,7 +687,21 @@ run.bat
 
 ---
 
-## 23. Configuration
+## 23. Docker and Containerization
+
+```mermaid
+flowchart TD
+    subgraph DockerCompose ["Docker Compose Multi-Container Stack"]
+        direction TB
+        C_FE["Client Container (Nginx / Vite Static) :5173"]
+        C_BE["Server Container (Uvicorn / FastAPI) :8000"]
+        C_FE -->|Internal Network Call| C_BE
+    end
+```
+
+---
+
+## 24. Configuration
 
 ### Client Configuration (`client/.env`)
 ```env
@@ -608,25 +721,31 @@ PORT=8000
 
 ---
 
-## 24. Machine Learning and Mathematical Algorithms
+## 25. Machine Learning and Mathematical Algorithms
 
-```text
-                LOGISCOPE ALGORITHMIC ENGINE STACK
-
-1. Demand Forecasting   : Multivariate regression with environmental scalars
-2. Deficit Prediction   : Continuous depletion curve integration & safety bounds
-3. Route ETA Calculation: Terrain slope resistance + meteorological penalty function
-4. Anomaly Radar        : Normalized Gaussian deviation score (Z >= 3.0σ)
-5. Pre-positioning      : Constraint-based multi-echelon MILP optimization
+```mermaid
+flowchart LR
+    A["1. Demand Forecasting<br/>(Multivariate Regression)"] --> B["2. Deficit Prediction<br/>(Depletion Curve Scan)"]
+    B --> C["3. Route ETA Calculation<br/>(Terrain & Weather Friction)"]
+    C --> D["4. Telemetry Anomaly Radar<br/>(Z-Score Gaussian Filter)"]
+    D --> E["5. Pre-Positioning Optimization<br/>(Constraint-Based MILP)"]
 ```
 
-### 24.1 Anomaly Radar Formula
+### 25.1 Anomaly Radar Formula
 $$Z = \frac{x_{\text{observed}} - \mu_{\text{baseline}}}{\sigma_{\text{baseline}}}$$
 * If $\mid Z \mid \ge 3.0$: Marked as critical telemetry divergence.
 
 ---
 
-## 25. Testing and Validation
+## 26. Model Training and Retraining
+
+The analytical models support continuous parameter tuning:
+* **Baseline Draw Calibration**: Updates base consumption rates from aggregated 30-day historical logs.
+* **Environmental Factor Re-weighting**: Re-evaluates altitude and temperature scalars against seasonal weather station telemetry.
+
+---
+
+## 27. Testing and Validation
 
 LOGISCOPE incorporates both unit validation tests and historical doctrinal validation cases (e.g., Kargil Conflict 1999, Eastern Monsoon Gridlock 2022, High-Altitude Deep Winter Freeze 2020) to benchmark AI pre-positioning against historical manual logistics outcomes:
 
@@ -635,25 +754,29 @@ LOGISCOPE incorporates both unit validation tests and historical doctrinal valid
 
 ---
 
-## 26. Deployment
+## 28. Deployment
 
-### Live Deployment Architecture
-* **Frontend Web App**: Hosted statically via **GitHub Pages** with GitHub Actions continuous deployment (`client/dist`).
-* **Backend REST API**: Hosted on **Render** as a high-performance Python Web Service (`https://logiscope-ai.onrender.com`).
+```mermaid
+flowchart LR
+    subgraph Internet ["Public Web Access"]
+        USER["User Web Browser"]
+    end
 
-```text
-                  USER BROWSER
-                       │
-        ┌──────────────┴──────────────┐
-        ↓                             ↓
-  GitHub Pages                  Render Cloud
- (Static React Client)       (FastAPI Python Server)
- https://xylium117.github.io  https://logiscope-ai.onrender.com
+    subgraph GitHubHosting ["GitHub Pages CDN"]
+        GH_PAGES["Static React Client<br/>https://xylium117.github.io/logiscope.ai/"]
+    end
+
+    subgraph RenderHosting ["Render Cloud Platform"]
+        RENDER_API["FastAPI Python Web Service<br/>https://logiscope-ai.onrender.com/api"]
+    end
+
+    USER --> GH_PAGES
+    GH_PAGES -->|REST API JSON Requests| RENDER_API
 ```
 
 ---
 
-## 27. Performance Considerations
+## 29. Performance Considerations
 
 * **Client-Side Latency**: Fast client-side component re-renders via Vite bundler with KaTeX formula pre-parsing.
 * **Asynchronous Execution**: FastAPI non-blocking endpoints with sub-50ms inference times for full 7-day network forecasts.
@@ -661,7 +784,7 @@ LOGISCOPE incorporates both unit validation tests and historical doctrinal valid
 
 ---
 
-## 28. Security and Operational Privacy (OPSEC)
+## 30. Security and Operational Privacy (OPSEC)
 
 * **Zero Classified Data Leakage**: All geographic topologies and supply numbers use mathematically rigorous **synthetic models**, enabling end-to-end AI validation, C2 stress-testing, and training without exposing classified defense data.
 * **CORS Protection**: Explicit Cross-Origin Resource Sharing boundaries enforced in FastAPI middleware.
@@ -669,7 +792,7 @@ LOGISCOPE incorporates both unit validation tests and historical doctrinal valid
 
 ---
 
-## 29. Limitations
+## 31. Limitations
 
 * **Simulated Sensor Feed**: Real-world hardware deployments require integration with physical LoRaWAN/Satellite IoT transponders.
 * **Synoptic Weather Integration**: Weather impacts are currently modeled through simulated meteorological scenarios rather than live Doppler radar satellite feeds.
@@ -677,7 +800,7 @@ LOGISCOPE incorporates both unit validation tests and historical doctrinal valid
 
 ---
 
-## 30. Future Development
+## 32. Future Development
 
 * **Live Satellite Weather Feeds**: Integration with real-time IMD/Copernicus weather API streams.
 * **Graph Neural Network (GNN) Routing**: Implementing spatial-temporal graph neural networks for route disruption prediction.
@@ -686,7 +809,7 @@ LOGISCOPE incorporates both unit validation tests and historical doctrinal valid
 
 ---
 
-## 31. License
+## 33. License
 
 This project is licensed under the **MIT License**. See the `LICENSE` file for details.
 
